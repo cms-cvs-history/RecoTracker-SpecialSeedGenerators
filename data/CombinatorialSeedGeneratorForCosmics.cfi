@@ -1,0 +1,23 @@
+module combinatorialcosmicseedfinder= CombinatorialSeedGeneratorForCosmics{
+    InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+    InputTag rphirecHits    = siStripMatchedRecHits:rphiRecHit
+    InputTag stereorecHits  = siStripMatchedRecHits:stereoRecHit
+    double SeedMomentum = 0.2    #initial momentum in GeV !!!set to a lower value for slice test data	
+    untracked string GeometricStructure  = "CkfTIF3"  #/other options: CkfTIBD+ (set to CkfTIBD+ to run on slice test data or CkfTOB for TOB slice test)
+    string Matcher = "StandardMatcher"
+    PSet UpperScintillatorParameters = {
+      double WidthInX = 100      #half dimension in global X
+      double LenghtInZ = 100	   #half dimension in global Z	
+      double GlobalX = 0         #scintillator's center position in global X
+      double GlobalY = 300       #scintillator's center position in global Y
+      double GlobalZ = 50        #scintillator's center position in global Z  
+    }
+    PSet LowerScintillatorParameters = {
+      double WidthInX = 100      #half dimension in global X
+      double LenghtInZ = 100     #half dimension in global Z
+      double GlobalX = 0         #scintillator's center position in global X
+      double GlobalY = -100      #scintillator's center position in global Y
+      double GlobalZ = 50        #scintillator's center position in global Z
+    }
+}
+
