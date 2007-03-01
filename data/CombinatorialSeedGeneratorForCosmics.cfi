@@ -4,6 +4,7 @@ module combinatorialcosmicseedfinder= CombinatorialSeedGeneratorForCosmics{
     InputTag stereorecHits  = siStripMatchedRecHits:stereoRecHit
     double SeedMomentum = 1    #initial momentum in GeV !!!set to a lower value for slice test data	
     untracked string GeometricStructure  = "CkfTIF3"  #/other options: CkfTIBD+ (set to CkfTIBD+ to run on slice test data or CkfTOB for TOB slice test)
+    bool UseScintillatorsConstraint = true
     string Matcher = "StandardMatcher"
     PSet UpperScintillatorParameters = {
       double WidthInX = 100      #half dimension in global X
