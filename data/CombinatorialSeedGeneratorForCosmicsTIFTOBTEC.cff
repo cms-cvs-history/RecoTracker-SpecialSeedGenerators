@@ -25,4 +25,5 @@ include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
 
 
 #seeding module
-module combinatorialcosmicseedfinderTIFTOBTEC = combinatorialcosmicseedfinder from "RecoTracker/SpecialSeedGenerators/data/CombinatorialSeedGeneratorForCosmics.cfi" 
+module combinatorialcosmicseedfinderTIFTOBTEC = combinatorialcosmicseedfinder from "RecoTracker/SpecialSeedGenerators/data/CombinatorialSeedGeneratorForCosmics.cfi"
+replace combinatorialcosmicseedfinderTIFTOBTEC.UseScintillatorsConstraint = false 
