@@ -19,10 +19,9 @@ include "RecoLocalTracker/SiPixelRecHits/data/PixelCPEParmError.cfi"
 
 #TransientTrackingBuilder
 include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder.cfi"
-
+include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilderWithoutRefit.cfi"
 #recHitMatcher
-include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
-
+#include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
 
 #seeding module
 module combinatorialcosmicseedfinderTIF = combinatorialcosmicseedfinder from "RecoTracker/SpecialSeedGenerators/data/CombinatorialSeedGeneratorForCosmics.cfi"

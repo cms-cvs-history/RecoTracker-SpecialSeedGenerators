@@ -21,9 +21,18 @@ include "RecoLocalTracker/SiPixelRecHits/data/PixelCPEParmError.cfi"
 include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder.cfi"
 
 #recHitMatcher
-include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
+#include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
 
+#SeedCleaner
+include "RecoTracker/SpecialSeedGenerators/data/SeedCleaner.cfi"
 
 #seeding module
 module combinatorialcosmicseedfinderTIFTIBTOB = combinatorialcosmicseedfinder from "RecoTracker/SpecialSeedGenerators/data/CombinatorialSeedGeneratorForCosmics.cfi"
-replace combinatorialcosmicseedfinderTIFTIBTOB.GeometricStructure="CkfTIBTOB" 
+replace combinatorialcosmicseedfinderTIFTIBTOB.OrderedHitsFactoryOutInPSet.LayerPSet.layerList = {"TOB4+TOB5+TOB6",
+                            						      			"TOB3+TOB5+TOB6",
+                            						      			"TOB3+TOB4+TOB5",
+                            						      			"TOB2+TOB4+TOB5",
+                            						      			"TOB2+TOB4+TOB6"}
+replace combinatorialcosmicseedfinderTIFTIBTOB.OrderedHitsFactoryInOutPSet.ComponentName="StandardHitPairGenerator"
+replace combinatorialcosmicseedfinderTIFTIBTOB.OrderedHitsFactoryInOutPSet.LayerPSet.layerList = {"TIB1+TIB2",
+                                                                              			"TIB1+TIB3"}

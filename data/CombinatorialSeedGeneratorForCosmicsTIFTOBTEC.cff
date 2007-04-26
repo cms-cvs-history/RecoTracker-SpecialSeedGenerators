@@ -21,9 +21,24 @@ include "RecoLocalTracker/SiPixelRecHits/data/PixelCPEParmError.cfi"
 include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder.cfi"
 
 #recHitMatcher
-include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
-
-
+#include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
+#SeedCleaner
+include "RecoTracker/SpecialSeedGenerators/data/SeedCleaner.cfi"
 #seeding module
 module combinatorialcosmicseedfinderTIFTOBTEC = combinatorialcosmicseedfinder from "RecoTracker/SpecialSeedGenerators/data/CombinatorialSeedGeneratorForCosmics.cfi"
-replace combinatorialcosmicseedfinderTIFTOBTEC.UseScintillatorsConstraint = false 
+replace combinatorialcosmicseedfinderTIFTOBTEC.UseScintillatorsConstraint = false
+replace combinatorialcosmicseedfinderTIFTOBTEC.OuterLayerSetsCfg.layerList = {"TOB4+TOB5+TOB6",
+                                                                              "TOB3+TOB5+TOB6",
+                                                                              "TOB3+TOB4+TOB5",
+                                                                              "TOB2+TOB4+TOB5",
+                                                                              "TOB2+TOB4+TOB6",
+									      	"TEC7_pos+TEC7_pos",
+                            							"TEC6_pos+TEC7_pos",
+                            							"TEC6_pos+TEC6_pos",
+                            							"TEC5_pos+TEC6_pos",
+                            							"TEC5_pos+TEC7_pos",
+                            							"TEC4_pos+TEC5_pos",
+                            							"TEC4_pos+TEC6_pos"}
+replace combinatorialcosmicseedfinderTIFTOBTEC.InnerLayerSetsCfg.layerList = {"TOB1+TOB2+TOB3",
+                                                                              "TOB1+TOB2+TOB4",
+                                                                              "TOB1+TOB2+TOB5"} 

@@ -1,11 +1,80 @@
-module combinatorialcosmicseedfinder= CombinatorialSeedGeneratorForCosmics{
-    InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
-    InputTag rphirecHits    = siStripMatchedRecHits:rphiRecHit
-    InputTag stereorecHits  = siStripMatchedRecHits:stereoRecHit
+module combinatorialcosmicseedfinder= CtfSpecialSeedGenerator{
     double SeedMomentum = 1    #initial momentum in GeV !!!set to a lower value for slice test data	
-    untracked string GeometricStructure  = "CkfTIF3"  #/other options: CkfTIBD+ (set to CkfTIBD+ to run on slice test data or CkfTOB for TOB slice test)
+    bool SetMomentum = true
+    string TTRHBuilder = "WithTrackAngle"	
     bool UseScintillatorsConstraint = true
-    string Matcher = "StandardMatcher"
+    bool CheckHitsAreOnDifferentLayers = true
+    bool SeedsFromPositiveY = true
+    PSet RegionFactoryPSet = {
+     #string ComponentName = "RectangularEtaPhiTrackingRegionProducer"
+     #include "RecoTracker/TkTrackingRegions/data/RectangularEtaPhiTrackingRegion.cfi"
+     string ComponentName = "GlobalRegionProducer" 
+     include "RecoTracker/TkTrackingRegions/data/GlobalTrackingRegion.cfi"	 
+   }
+ 
+   PSet OrderedHitsFactoryOutInPSet = {
+     	string ComponentName = "GenericTripletGenerator"
+     	untracked string PropagationDirection = "alongMomentum"
+	PSet LayerPSet = {
+  		vstring layerList = { "TOB4+TOB5+TOB6",
+                            		"TOB3+TOB5+TOB6",
+                            		"TOB3+TOB4+TOB5",
+                            		"TOB2+TOB4+TOB5",
+                            		"TOB3+TOB4+TOB6",
+                            		"TOB2+TOB4+TOB6",
+					"TEC1+TEC2+TEC3",
+					"TEC2+TEC3+TEC4",
+					"TEC3+TEC4+TEC5",
+					"TEC4+TEC5+TEC6",
+					"TEC5+TEC6+TEC7"}
+		PSet TIB = {
+                        InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+                        InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                        string TTRHBuilder = "WithTrackAngle"
+                }
+  		PSet TOB = {
+    			InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit  
+			InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+    			string TTRHBuilder = "WithTrackAngle" 
+  		}
+		PSet TEC = {
+                        InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+                        InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                        string TTRHBuilder = "WithTrackAngle"
+			untracked bool useRingSelector = true
+			int32 minRing = 5
+			int32 maxRing = 7
+                }
+	}
+   }	
+   PSet OrderedHitsFactoryInOutPSet = {
+   	string ComponentName = "GenericTripletGenerator" #"StandardHitPairGenerator"
+     	untracked string PropagationDirection = "oppositeToMomentum"
+     	PSet LayerPSet = {
+                vstring layerList = { "TIB1+TIB2+TIB3"} #,
+                            #"TIB1+TIB3"}
+                PSet TIB = {
+                        InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+                        InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                        string TTRHBuilder = "WithTrackAngle"
+                }
+		PSet TOB = {
+                        InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+                        InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                        string TTRHBuilder = "WithTrackAngle"
+                }
+                PSet TEC = {
+                        InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+                        InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                        string TTRHBuilder = "WithTrackAngle"
+                        untracked bool useRingSelector = true
+                        int32 minRing = 5
+                        int32 maxRing = 7
+                }
+        }
+   }
+
+
     PSet UpperScintillatorParameters = {
       double WidthInX = 100      #half dimension in global X
       double LenghtInZ = 100	   #half dimension in global Z	
