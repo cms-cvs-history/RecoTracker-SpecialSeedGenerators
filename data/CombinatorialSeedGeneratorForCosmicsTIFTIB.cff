@@ -1,5 +1,5 @@
 # magnetic field
-include "Geometry/CMSCommonData/data/cmsMagneticFieldXML.cfi"
+#include "Geometry/CMSCommonData/data/cmsMagneticFieldXML.cfi"
 include "MagneticField/Engine/data/uniformMagneticField.cfi"
 
 # cms geometry
@@ -25,10 +25,24 @@ include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder
 
 #seeding module
 module combinatorialcosmicseedfinderTIFTIB = combinatorialcosmicseedfinder from "RecoTracker/SpecialSeedGenerators/data/CombinatorialSeedGeneratorForCosmics.cfi"
-replace combinatorialcosmicseedfinderTIFTIB.OrderedHitsFactoryOutInPSet.ComponentName="StandardHitPairGenerator"
-replace combinatorialcosmicseedfinderTIFTIB.OrderedHitsFactoryOutInPSet.LayerPSet.layerList={"TIB3+TIB4"}
-replace combinatorialcosmicseedfinderTIFTIB.OrderedHitsFactoryInOutPSet.ComponentName="StandardHitPairGenerator"
-replace combinatorialcosmicseedfinderTIFTIB.OrderedHitsFactoryInOutPSet.LayerPSet.layerList={"TIB1+TIB2"}
+replace combinatorialcosmicseedfinderTIFTIB.OrderedHitsFactoryPSets = {
+    {   string ComponentName = "GenericPairGenerator"
+        untracked string NavigationDirection  = "ousideIn"
+        untracked string PropagationDirection = "alongMomentum"
+        PSet LayerPSet = {
+                vstring layerList = { "TIB3+TIB4" }
+                using layerInfo
+       }
+    },
+    {   string ComponentName = "GenericPairGenerator"
+        untracked string NavigationDirection  = "insideOut"
+        untracked string PropagationDirection = "oppositeToMomentum"
+        PSet LayerPSet = {
+                vstring layerList = { "TIB1+TIB2" }
+                using layerInfo
+       }
+    } 
+}
 replace combinatorialcosmicseedfinderTIFTIB.SeedMomentum=0.2
 replace combinatorialcosmicseedfinderTIFTIB.UpperScintillatorParameters.WidthInX=50 
 replace combinatorialcosmicseedfinderTIFTIB.UpperScintillatorParameters.LenghtInZ=200

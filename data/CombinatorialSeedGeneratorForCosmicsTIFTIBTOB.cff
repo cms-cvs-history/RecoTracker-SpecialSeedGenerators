@@ -1,5 +1,5 @@
 # magnetic field
-include "Geometry/CMSCommonData/data/cmsMagneticFieldXML.cfi"
+#include "Geometry/CMSCommonData/data/cmsMagneticFieldXML.cfi"
 include "MagneticField/Engine/data/uniformMagneticField.cfi"
 
 # cms geometry
@@ -19,20 +19,35 @@ include "RecoLocalTracker/SiPixelRecHits/data/PixelCPEParmError.cfi"
 
 #TransientTrackingBuilder
 include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder.cfi"
-
+include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilderWithoutRefit.cfi"
 #recHitMatcher
 #include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
 
-#SeedCleaner
-include "RecoTracker/SpecialSeedGenerators/data/SeedCleaner.cfi"
+
 
 #seeding module
 module combinatorialcosmicseedfinderTIFTIBTOB = combinatorialcosmicseedfinder from "RecoTracker/SpecialSeedGenerators/data/CombinatorialSeedGeneratorForCosmics.cfi"
-replace combinatorialcosmicseedfinderTIFTIBTOB.OrderedHitsFactoryOutInPSet.LayerPSet.layerList = {"TOB4+TOB5+TOB6",
-                            						      			"TOB3+TOB5+TOB6",
-                            						      			"TOB3+TOB4+TOB5",
-                            						      			"TOB2+TOB4+TOB5",
-                            						      			"TOB2+TOB4+TOB6"}
-replace combinatorialcosmicseedfinderTIFTIBTOB.OrderedHitsFactoryInOutPSet.ComponentName="StandardHitPairGenerator"
-replace combinatorialcosmicseedfinderTIFTIBTOB.OrderedHitsFactoryInOutPSet.LayerPSet.layerList = {"TIB1+TIB2",
-                                                                              			"TIB1+TIB3"}
+replace combinatorialcosmicseedfinderTIFTIBTOB.OrderedHitsFactoryPSets = {
+    {   string ComponentName = "GenericTripletGenerator"
+        untracked string NavigationDirection  = "ousideIn"
+        untracked string PropagationDirection = "alongMomentum"
+        PSet LayerPSet = {
+                vstring layerList = { "TOB4+TOB5+TOB6",
+                                        "TOB3+TOB5+TOB6",
+                                        "TOB3+TOB4+TOB5",
+                                        "TOB2+TOB4+TOB5",
+                                        "TOB3+TOB4+TOB6",
+                                        "TOB2+TOB4+TOB6"}
+                using layerInfo
+       }
+    },
+    {   string ComponentName = "GenericTripletGenerator" #"StandardHitPairGenerator"
+        untracked string NavigationDirection  = "insideOut"
+        untracked string PropagationDirection = "oppositeToMomentum"
+        PSet LayerPSet = {
+                vstring layerList = { "TIB1+TIB2+TIB3"} #,
+                            #"TIB1+TIB3"}
+                using layerInfo
+        }
+    }
+}

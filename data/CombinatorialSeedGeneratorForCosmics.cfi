@@ -10,7 +10,7 @@ block layerInfo = {
 		string TTRHBuilder = "WithTrackAngle"
         }
         PSet TEC = {
-		#InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+		InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
 		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
 		string TTRHBuilder = "WithTrackAngle"
 		untracked bool useRingSlector = false

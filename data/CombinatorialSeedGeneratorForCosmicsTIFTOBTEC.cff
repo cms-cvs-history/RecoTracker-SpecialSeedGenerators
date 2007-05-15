@@ -1,5 +1,5 @@
 # magnetic field
-include "Geometry/CMSCommonData/data/cmsMagneticFieldXML.cfi"
+#include "Geometry/CMSCommonData/data/cmsMagneticFieldXML.cfi"
 include "MagneticField/Engine/data/uniformMagneticField.cfi"
 
 # cms geometry
@@ -19,26 +19,42 @@ include "RecoLocalTracker/SiPixelRecHits/data/PixelCPEParmError.cfi"
 
 #TransientTrackingBuilder
 include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder.cfi"
+include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilderWithoutRefit.cfi"
 
 #recHitMatcher
 #include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
-#SeedCleaner
-include "RecoTracker/SpecialSeedGenerators/data/SeedCleaner.cfi"
+
 #seeding module
 module combinatorialcosmicseedfinderTIFTOBTEC = combinatorialcosmicseedfinder from "RecoTracker/SpecialSeedGenerators/data/CombinatorialSeedGeneratorForCosmics.cfi"
 replace combinatorialcosmicseedfinderTIFTOBTEC.UseScintillatorsConstraint = false
-replace combinatorialcosmicseedfinderTIFTOBTEC.OuterLayerSetsCfg.layerList = {"TOB4+TOB5+TOB6",
-                                                                              "TOB3+TOB5+TOB6",
-                                                                              "TOB3+TOB4+TOB5",
-                                                                              "TOB2+TOB4+TOB5",
-                                                                              "TOB2+TOB4+TOB6",
-									      	"TEC7_pos+TEC7_pos",
-                            							"TEC6_pos+TEC7_pos",
-                            							"TEC6_pos+TEC6_pos",
-                            							"TEC5_pos+TEC6_pos",
-                            							"TEC5_pos+TEC7_pos",
-                            							"TEC4_pos+TEC5_pos",
-                            							"TEC4_pos+TEC6_pos"}
-replace combinatorialcosmicseedfinderTIFTOBTEC.InnerLayerSetsCfg.layerList = {"TOB1+TOB2+TOB3",
-                                                                              "TOB1+TOB2+TOB4",
-                                                                              "TOB1+TOB2+TOB5"} 
+replace combinatorialcosmicseedfinderTIFTOBTEC.OrderedHitsFactoryPSets = {
+    {   string ComponentName = "GenericTripletGenerator"
+        untracked string NavigationDirection  = "ousideIn"
+        untracked string PropagationDirection = "alongMomentum"
+        PSet LayerPSet = {
+                vstring layerList = { "TOB4+TOB5+TOB6",
+                                        "TOB3+TOB5+TOB6",
+                                        "TOB3+TOB4+TOB5",
+                                        "TOB2+TOB4+TOB5",
+                                        "TOB3+TOB4+TOB6",
+                                        "TOB2+TOB4+TOB6"}
+                using layerInfo
+       }
+    },
+    {   string ComponentName = "GenericPairGenerator"
+        untracked string NavigationDirection  = "ousideIn"
+        untracked string PropagationDirection = "alongMomentum"
+        PSet LayerPSet = {
+                vstring layerList = {   "TEC1_pos+TEC2_pos",
+                                        "TEC2_pos+TEC3_pos",
+                                        "TEC3_pos+TEC4_pos",
+                                        "TEC4_pos+TEC5_pos",
+                                        "TEC5_pos+TEC6_pos",
+                                        "TEC6_pos+TEC7_pos",
+                                        "TEC7_pos+TEC8_pos",
+                                        "TEC8_pos+TEC9_pos"}
+                using layerInfo
+       }
+
+    }
+}
