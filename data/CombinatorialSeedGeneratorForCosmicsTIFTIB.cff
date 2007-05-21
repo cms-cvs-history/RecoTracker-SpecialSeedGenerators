@@ -27,7 +27,7 @@ include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder
 module combinatorialcosmicseedfinderTIFTIB = combinatorialcosmicseedfinder from "RecoTracker/SpecialSeedGenerators/data/CombinatorialSeedGeneratorForCosmics.cfi"
 replace combinatorialcosmicseedfinderTIFTIB.OrderedHitsFactoryPSets = {
     {   string ComponentName = "GenericPairGenerator"
-        untracked string NavigationDirection  = "ousideIn"
+        untracked string NavigationDirection  = "outsideIn"
         untracked string PropagationDirection = "alongMomentum"
         PSet LayerPSet = {
                 vstring layerList = { "TIB3+TIB4" }

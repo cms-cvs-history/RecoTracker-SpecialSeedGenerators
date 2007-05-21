@@ -1,0 +1,72 @@
+# magnetic field
+#include "Geometry/CMSCommonData/data/cmsMagneticFieldXML.cfi"
+include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
+
+# cms geometry
+include "Geometry/CMSCommonData/data/cmsIdealGeometryXML.cfi"
+
+# tracker geometry
+include "Geometry/TrackerGeometryBuilder/data/trackerGeometry.cfi"
+
+# tracker numbering
+include "Geometry/TrackerNumberingBuilder/data/trackerNumberingGeometry.cfi"
+
+#stripCPE
+include "RecoLocalTracker/SiStripRecHitConverter/data/StripCPEfromTrackAngle.cfi"
+
+#pixelCPE
+include "RecoLocalTracker/SiPixelRecHits/data/PixelCPEParmError.cfi"
+
+#TransientTrackingBuilder
+include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder.cfi"
+include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilderWithoutRefit.cfi"
+#recHitMatcher
+#include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
+
+#seeding module
+module combinatorialcosmicseedfinderP5 = combinatorialcosmicseedfinder from "RecoTracker/SpecialSeedGenerators/data/CombinatorialSeedGeneratorForCosmics.cfi"
+replace combinatorialcosmicseedfinderP5.SetMomentum = false
+replace combinatorialcosmicseedfinderP5.UseScintillatorsConstraint = false
+replace combinatorialcosmicseedfinderP5.OrderedHitsFactoryPSets = {
+    {   string ComponentName = "GenericTripletGenerator"
+        untracked string NavigationDirection  = "outsideIn"
+        untracked string PropagationDirection = "alongMomentum"
+        PSet LayerPSet = {
+                vstring layerList = { "TOB4+TOB5+TOB6",
+                                        "TOB3+TOB5+TOB6",
+                                        "TOB3+TOB4+TOB5",
+                                        "TOB2+TOB4+TOB5",
+                                        "TOB3+TOB4+TOB6",
+                                        "TOB2+TOB4+TOB6"}
+                using layerInfo
+       }
+    },
+    {   string ComponentName = "GenericTripletGenerator"
+        untracked string NavigationDirection  = "outsideIn"
+        untracked string PropagationDirection = "alongMomentum"
+        PSet LayerPSet = {
+                vstring layerList = {   "TEC1_pos+TEC2_pos+TEC3_pos",
+                                        "TEC2_pos+TEC3_pos+TEC4_pos",
+                                        "TEC3_pos+TEC4_pos+TEC5_pos",
+                                        "TEC4_pos+TEC5_pos+TEC6_pos",
+                                        "TEC5_pos+TEC6_pos+TEC7_pos",
+                                        "TEC6_pos+TEC7_pos+TEC8_pos",
+                                        "TEC7_pos+TEC8_pos+TEC9_pos"}
+                using layerInfo
+       }
+    },
+    {   string ComponentName = "GenericTripletGenerator"
+        untracked string NavigationDirection  = "outsideIn"
+        untracked string PropagationDirection = "alongMomentum"
+        PSet LayerPSet = {
+                vstring layerList = {   "TEC1_neg+TEC2_neg+TEC3_neg",
+                                        "TEC2_neg+TEC3_neg+TEC4_neg",
+                                        "TEC3_neg+TEC4_neg+TEC5_neg",
+                                        "TEC4_neg+TEC5_neg+TEC6_neg",
+                                        "TEC5_neg+TEC6_neg+TEC7_neg",
+                                        "TEC6_neg+TEC7_neg+TEC8_neg",
+                                        "TEC7_neg+TEC8_neg+TEC9_neg"}
+                using layerInfo
+       }
+    }
+} 
