@@ -1,5 +1,5 @@
 # magnetic field
-include "Geometry/CMSCommonData/data/cmsMagneticFieldXML.cfi"
+#include "Geometry/CMSCommonData/data/cmsMagneticFieldXML.cfi"
 include "MagneticField/Engine/data/uniformMagneticField.cfi"
 
 # cms geometry
@@ -19,11 +19,34 @@ include "RecoLocalTracker/SiPixelRecHits/data/PixelCPEParmError.cfi"
 
 #TransientTrackingBuilder
 include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder.cfi"
+include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilderWithoutRefit.cfi"
 
 #recHitMatcher
-include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
-
+#include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
 
 #seeding module
 module combinatorialcosmicseedfinderTIFTOB = combinatorialcosmicseedfinder from "RecoTracker/SpecialSeedGenerators/data/CombinatorialSeedGeneratorForCosmics.cfi"
-replace combinatorialcosmicseedfinderTIFTOB.GeometricStructure="CkfTOB" 
+replace combinatorialcosmicseedfinderTIFTOB.OrderedHitsFactoryPSets = {
+    {   string ComponentName = "GenericTripletGenerator"
+        untracked string NavigationDirection  = "outsideIn"
+        untracked string PropagationDirection = "alongMomentum"
+        PSet LayerPSet = {
+	    vstring layerList = {"TOB4+TOB5+TOB6",
+         			 "TOB3+TOB5+TOB6",
+                            	 "TOB3+TOB4+TOB5",
+                            	 "TOB2+TOB4+TOB5",
+                            	 "TOB2+TOB4+TOB6"}
+            using layerInfo
+       }
+    },
+    {   string ComponentName = "GenericTripletGenerator"
+        untracked string NavigationDirection  = "insideOut"
+        untracked string PropagationDirection = "oppositeToMomentum"
+        PSet LayerPSet = {
+            vstring layerList = {"TOB1+TOB2+TOB3",
+                                 "TOB1+TOB2+TOB4",
+                                 "TOB1+TOB2+TOB5"}
+            using layerInfo
+       }
+    }
+}

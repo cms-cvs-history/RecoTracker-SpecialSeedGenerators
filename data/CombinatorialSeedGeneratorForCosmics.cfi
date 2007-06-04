@@ -1,11 +1,90 @@
-module combinatorialcosmicseedfinder= CombinatorialSeedGeneratorForCosmics{
-    InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
-    InputTag rphirecHits    = siStripMatchedRecHits:rphiRecHit
-    InputTag stereorecHits  = siStripMatchedRecHits:stereoRecHit
+block layerInfo = {
+	 PSet TIB = {
+		InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+		string TTRHBuilder = "WithTrackAngle"
+         }
+         PSet TOB = {
+		InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+		string TTRHBuilder = "WithTrackAngle"
+        }
+        PSet TEC = {
+		InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+		string TTRHBuilder = "WithTrackAngle"
+		untracked bool useRingSlector = false
+		int32 minRing = 5
+		int32 maxRing = 7
+        }
+}
+
+
+
+
+
+
+
+
+
+
+module combinatorialcosmicseedfinder= CtfSpecialSeedGenerator{
+    bool SetMomentum = true
+    vint32 Charges = {-1}	
     double SeedMomentum = 1    #initial momentum in GeV !!!set to a lower value for slice test data	
-    untracked string GeometricStructure  = "CkfTIF3"  #/other options: CkfTIBD+ (set to CkfTIBD+ to run on slice test data or CkfTOB for TOB slice test)
+    string TTRHBuilder = "WithTrackAngle"	
     bool UseScintillatorsConstraint = true
-    string Matcher = "StandardMatcher"
+    bool CheckHitsAreOnDifferentLayers = false
+    bool SeedsFromPositiveY = true
+    PSet RegionFactoryPSet = {
+     #string ComponentName = "RectangularEtaPhiTrackingRegionProducer"
+     #include "RecoTracker/TkTrackingRegions/data/RectangularEtaPhiTrackingRegion.cfi"
+     string ComponentName = "GlobalRegionProducer" 
+     include "RecoTracker/TkTrackingRegions/data/GlobalTrackingRegion.cfi"	 
+   }
+ 
+   VPSet OrderedHitsFactoryPSets = {
+    {	string ComponentName = "GenericTripletGenerator"
+        untracked string NavigationDirection  = "outsideIn"
+     	untracked string PropagationDirection = "alongMomentum"
+	PSet LayerPSet = {
+  		vstring layerList = { "TOB4+TOB5+TOB6",
+                            		"TOB3+TOB5+TOB6",
+                            		"TOB3+TOB4+TOB5",
+                            		"TOB2+TOB4+TOB5",
+                            		"TOB3+TOB4+TOB6",
+                            		"TOB2+TOB4+TOB6"}
+		using layerInfo
+       }
+    },
+    {   string ComponentName = "GenericPairGenerator"
+        untracked string NavigationDirection  = "outsideIn"
+        untracked string PropagationDirection = "alongMomentum"
+        PSet LayerPSet = {
+                vstring layerList = {   "TEC1_pos+TEC2_pos",
+                                        "TEC2_pos+TEC3_pos",
+                                        "TEC3_pos+TEC4_pos",
+                                        "TEC4_pos+TEC5_pos",
+                                        "TEC5_pos+TEC6_pos",
+                                        "TEC6_pos+TEC7_pos",
+                                        "TEC7_pos+TEC8_pos",
+					"TEC8_pos+TEC9_pos"}
+		using layerInfo
+       }
+	
+    }, 
+    {	string ComponentName = "GenericTripletGenerator" #"StandardHitPairGenerator"
+        untracked string NavigationDirection  = "insideOut"
+     	untracked string PropagationDirection = "oppositeToMomentum"
+     	PSet LayerPSet = {
+                vstring layerList = { "TIB1+TIB2+TIB3"} #,
+                            #"TIB1+TIB3"}
+		using layerInfo
+        }
+    }
+   }
+
+
     PSet UpperScintillatorParameters = {
       double WidthInX = 100      #half dimension in global X
       double LenghtInZ = 100	   #half dimension in global Z	
