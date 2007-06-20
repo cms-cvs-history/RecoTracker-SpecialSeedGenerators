@@ -89,8 +89,8 @@ class CtfSpecialSeedGenerator : public edm::EDProducer
   //TrajectoryStateTransform theTransformer;
   SeedFromGenericPairOrTriplet* theSeedBuilder; 
   bool useScintillatorsConstraint;
-  BoundPlane::BoundPlanePointer upperScintillator;
-  BoundPlane::BoundPlanePointer lowerScintillator;
+  BoundPlane* upperScintillator;
+  BoundPlane* lowerScintillator;
 };
 #endif
 
