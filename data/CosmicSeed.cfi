@@ -6,7 +6,8 @@
     double originRadius=150
     double originHalfLength=90
     double originZPosition=0
-    untracked string HitsForSeeds = "pairs"  	
+    double SeedPt = 1.0
+    untracked string HitsForSeeds = "pairs"  
     string TTRHBuilder        =  "WithTrackAngle"	
     untracked string GeometricStructure  = "STANDARD" //other choice: TIBD+
   }
