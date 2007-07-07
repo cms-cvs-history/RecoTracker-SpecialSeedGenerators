@@ -63,7 +63,15 @@ replace combinatorialcosmicseedfinderP5.OrderedHitsFactoryPSets = {
                                         "TEC6_pos+TEC7_pos",
                                         "TEC7_pos+TEC8_pos",
 					"TEC8_pos+TEC9_pos"}
-                using layerInfo
+                #using layerInfo
+		PSet TEC = {
+                        InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+                        InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                        string TTRHBuilder = "WithTrackAngle"
+                        untracked bool useRingSlector = true
+                        int32 minRing = 5
+                        int32 maxRing = 7
+                }
        }
     },   #generator for TEC+ insideOut
     {   string ComponentName = "GenericPairGenerator"
@@ -78,7 +86,15 @@ replace combinatorialcosmicseedfinderP5.OrderedHitsFactoryPSets = {
                                         "TEC6_pos+TEC7_pos",
                                         "TEC7_pos+TEC8_pos",
                                         "TEC8_pos+TEC9_pos"}
-                using layerInfo
+                #using layerInfo
+		PSet TEC = {
+                        InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+                        InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                        string TTRHBuilder = "WithTrackAngle"
+                        untracked bool useRingSlector = true
+                        int32 minRing = 5
+                        int32 maxRing = 7
+                }
        }
     },	  #generator for TEC- outsideIn
     {   string ComponentName = "GenericPairGenerator"
@@ -93,7 +109,15 @@ replace combinatorialcosmicseedfinderP5.OrderedHitsFactoryPSets = {
                                         "TEC6_neg+TEC7_neg",
                                         "TEC7_neg+TEC8_neg",
 					"TEC8_neg+TEC9_neg"}
-                using layerInfo
+                #using layerInfo
+		PSet TEC = {
+                        InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+                        InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                        string TTRHBuilder = "WithTrackAngle"
+                        untracked bool useRingSlector = true
+                        int32 minRing = 5
+                        int32 maxRing = 7
+                }
        }
     },   #generator for TEC- insideOut 
     {   string ComponentName = "GenericPairGenerator"
@@ -108,7 +132,15 @@ replace combinatorialcosmicseedfinderP5.OrderedHitsFactoryPSets = {
                                         "TEC6_neg+TEC7_neg",
                                         "TEC7_neg+TEC8_neg",
                                         "TEC8_neg+TEC9_neg"}
-                using layerInfo
+                #using layerInfo
+		PSet TEC = {
+                        InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+                        InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                        string TTRHBuilder = "WithTrackAngle"
+                        untracked bool useRingSlector = true
+                        int32 minRing = 5
+                        int32 maxRing = 7
+                }
        }
     }	
 } 
