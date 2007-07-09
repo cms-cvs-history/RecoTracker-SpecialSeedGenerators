@@ -221,7 +221,7 @@ TrajectorySeed* SeedFromGenericPairOrTriplet::seedFromPair(const SeedingHitSet& 
                                        charge,
                                        &(*theMagfield));
         FreeTrajectoryState* startingState = new FreeTrajectoryState(gtp,initialError(trHits[0]));//trHits[1]));
-	if (!qualityFilter(startingState, hits)) return 0;
+	//if (!qualityFilter(startingState, hits)) return 0;
         //TrajectorySeed* seed = buildSeed(startingState, firstHit, dir);
         TrajectorySeed* seed = buildSeed(startingState, trHits, dir);
         delete startingState;
@@ -277,6 +277,7 @@ TrajectorySeed* SeedFromGenericPairOrTriplet::buildSeed(const FreeTrajectoryStat
                 return 0;
 	}	
 	LogDebug("SeedFromGenericPairOrTriplet") << "starting TSOS " << seedTSOS ;
+	seedTSOS.rescaleError(50);
 	PTrajectoryStateOnDet *PTraj=
 		theTransformer.persistentState(seedTSOS, trHits[1]->geographicalId().rawId());
 	edm::OwnVector<TrackingRecHit> seed_hits;
@@ -296,21 +297,21 @@ CurvilinearTrajectoryError SeedFromGenericPairOrTriplet::initialError(const Trac
 	//AlgebraicSymMatrix55 C = AlgebraicMatrixID();
         //C*=0.1;
         if (theSetMomentum){
-	/*
+		/*
 		C(0,0)=1/theP;
                 C(3,3)=transHit->globalPositionError().cxx();
                 C(4,4)=transHit->globalPositionError().czz();
-	*/
-	        C[0][0]=1/theP;
+		*/
+                C[0][0]=1/theP;
                 C[3][3]=transHit->globalPositionError().cxx();
                 C[4][4]=transHit->globalPositionError().czz();
         } else {
                 float zErr = transHit->globalPositionError().czz();
                 float transverseErr = transHit->globalPositionError().cxx(); // assume equal cxx cyy
-	/*	
+		/*
 		C(3,3) = transverseErr;
                 C(4,4) = zErr;
-	*/
+		*/
                 C[3][3] = transverseErr;
                 C[4][4] = zErr;
         }
