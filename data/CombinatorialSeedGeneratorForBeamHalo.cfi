@@ -40,8 +40,8 @@ module combinatorialbeamhaloseedfinder= CtfSpecialSeedGenerator{
    VPSet OrderedHitsFactoryPSets = {
 	#along momentum
     {   string ComponentName = "BeamHaloPairGenerator"
-        untracked string NavigationDirection  = "outsideIn"
-        untracked string PropagationDirection = "alongMomentum"
+        string NavigationDirection  = "outsideIn"
+        string PropagationDirection = "alongMomentum"
         PSet LayerPSet = {
                 vstring layerList = {  
 					"TID2_pos+TID3_pos",
@@ -56,8 +56,8 @@ module combinatorialbeamhaloseedfinder= CtfSpecialSeedGenerator{
     },
 	#and opposite to momentum
     {   string ComponentName = "BeamHaloPairGenerator"
-        untracked string NavigationDirection  = "outsideIn"
-        untracked string PropagationDirection = "oppositeToMomentum"
+        string NavigationDirection  = "outsideIn"
+        string PropagationDirection = "oppositeToMomentum"
         PSet LayerPSet = {
                 vstring layerList = {  
 					"TID2_pos+TID3_pos",

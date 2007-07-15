@@ -45,8 +45,8 @@ module combinatorialcosmicseedfinder= CtfSpecialSeedGenerator{
  
    VPSet OrderedHitsFactoryPSets = {
     {	string ComponentName = "GenericTripletGenerator"
-        untracked string NavigationDirection  = "outsideIn"
-     	untracked string PropagationDirection = "alongMomentum"
+        string NavigationDirection  = "outsideIn"
+     	string PropagationDirection = "alongMomentum"
 	PSet LayerPSet = {
   		vstring layerList = { "TOB4+TOB5+TOB6",
                             		"TOB3+TOB5+TOB6",
@@ -58,8 +58,8 @@ module combinatorialcosmicseedfinder= CtfSpecialSeedGenerator{
        }
     },
     {   string ComponentName = "GenericPairGenerator"
-        untracked string NavigationDirection  = "outsideIn"
-        untracked string PropagationDirection = "alongMomentum"
+        string NavigationDirection  = "outsideIn"
+        string PropagationDirection = "alongMomentum"
         PSet LayerPSet = {
                 vstring layerList = {   "TEC1_pos+TEC2_pos",
                                         "TEC2_pos+TEC3_pos",
@@ -74,8 +74,8 @@ module combinatorialcosmicseedfinder= CtfSpecialSeedGenerator{
 	
     }, 
     {	string ComponentName = "GenericTripletGenerator" #"StandardHitPairGenerator"
-        untracked string NavigationDirection  = "insideOut"
-     	untracked string PropagationDirection = "oppositeToMomentum"
+        string NavigationDirection  = "insideOut"
+     	string PropagationDirection = "oppositeToMomentum"
      	PSet LayerPSet = {
                 vstring layerList = { "TIB1+TIB2+TIB3"} #,
                             #"TIB1+TIB3"}

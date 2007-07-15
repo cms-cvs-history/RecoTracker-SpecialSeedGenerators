@@ -29,8 +29,8 @@ replace combinatorialcosmicseedfinderP5.SetMomentum = false
 replace combinatorialcosmicseedfinderP5.UseScintillatorsConstraint = false
 replace combinatorialcosmicseedfinderP5.OrderedHitsFactoryPSets = {
     {   string ComponentName = "GenericTripletGenerator"
-        untracked string NavigationDirection  = "outsideIn"
-        untracked string PropagationDirection = "alongMomentum"
+        string NavigationDirection  = "outsideIn"
+        string PropagationDirection = "alongMomentum"
         PSet LayerPSet = {
                 vstring layerList = { "TOB4+TOB5+TOB6",
                                         "TOB3+TOB5+TOB6",
@@ -42,8 +42,8 @@ replace combinatorialcosmicseedfinderP5.OrderedHitsFactoryPSets = {
        }
     },    #also some pairs in the barrel, in case the triplet fail. If the triplet secceds, the pairs should be skipped by the trajectory builder 
     {	string ComponentName = "GenericPairGenerator"
-        untracked string NavigationDirection  = "outsideIn"
-        untracked string PropagationDirection = "alongMomentum"
+        string NavigationDirection  = "outsideIn"
+        string PropagationDirection = "alongMomentum"
 	PSet LayerPSet = {
                 vstring layerList = {   "TOB5+TOB6",
                                         "TOB4+TOB5"}
@@ -52,8 +52,8 @@ replace combinatorialcosmicseedfinderP5.OrderedHitsFactoryPSets = {
     },   #for the TEC we use pairs (Fasthelix not working properly with ss TEC hits)
 	 # genereator for TEC+ outsideIn
     {   string ComponentName = "GenericPairGenerator"
-        untracked string NavigationDirection  = "outsideIn"
-        untracked string PropagationDirection = "alongMomentum"
+        string NavigationDirection  = "outsideIn"
+        string PropagationDirection = "alongMomentum"
         PSet LayerPSet = {
                 vstring layerList = {   "TEC1_pos+TEC2_pos",
                                         "TEC2_pos+TEC3_pos",
@@ -75,8 +75,8 @@ replace combinatorialcosmicseedfinderP5.OrderedHitsFactoryPSets = {
        }
     },   #generator for TEC+ insideOut
     {   string ComponentName = "GenericPairGenerator"
-        untracked string NavigationDirection  = "insideOut"
-        untracked string PropagationDirection = "alongMomentum"
+        string NavigationDirection  = "insideOut"
+        string PropagationDirection = "alongMomentum"
         PSet LayerPSet = {
                 vstring layerList = {   "TEC1_pos+TEC2_pos",
                                         "TEC2_pos+TEC3_pos",
@@ -98,8 +98,8 @@ replace combinatorialcosmicseedfinderP5.OrderedHitsFactoryPSets = {
        }
     },	  #generator for TEC- outsideIn
     {   string ComponentName = "GenericPairGenerator"
-        untracked string NavigationDirection  = "outsideIn"
-        untracked string PropagationDirection = "alongMomentum"
+        string NavigationDirection  = "outsideIn"
+        string PropagationDirection = "alongMomentum"
         PSet LayerPSet = {
                 vstring layerList = {   "TEC1_neg+TEC2_neg",
                                         "TEC2_neg+TEC3_neg",
@@ -121,15 +121,15 @@ replace combinatorialcosmicseedfinderP5.OrderedHitsFactoryPSets = {
        }
     },   #generator for TEC- insideOut 
     {   string ComponentName = "GenericPairGenerator"
-        untracked string NavigationDirection  = "insideOut"
-        untracked string PropagationDirection = "alongMomentum"
+        string NavigationDirection  = "insideOut"
+        string PropagationDirection = "alongMomentum"
         PSet LayerPSet = {
                 vstring layerList = {   "TEC1_neg+TEC2_neg",
                                         "TEC2_neg+TEC3_neg",
                                         "TEC3_neg+TEC4_neg",
                                         "TEC4_neg+TEC5_neg",
                                         "TEC5_neg+TEC6_neg",
-                                        "TEC6_neg+TEC7_neg",
+                                       "TEC6_neg+TEC7_neg",
                                         "TEC7_neg+TEC8_neg",
                                         "TEC8_neg+TEC9_neg"}
                 #using layerInfo

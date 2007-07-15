@@ -27,16 +27,16 @@ include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder
 module combinatorialcosmicseedfinderTIFTIB = combinatorialcosmicseedfinder from "RecoTracker/SpecialSeedGenerators/data/CombinatorialSeedGeneratorForCosmics.cfi"
 replace combinatorialcosmicseedfinderTIFTIB.OrderedHitsFactoryPSets = {
     {   string ComponentName = "GenericPairGenerator"
-        untracked string NavigationDirection  = "outsideIn"
-        untracked string PropagationDirection = "alongMomentum"
+        string NavigationDirection  = "outsideIn"
+        string PropagationDirection = "alongMomentum"
         PSet LayerPSet = {
                 vstring layerList = { "TIB3+TIB4" }
                 using layerInfo
        }
     },
     {   string ComponentName = "GenericPairGenerator"
-        untracked string NavigationDirection  = "insideOut"
-        untracked string PropagationDirection = "oppositeToMomentum"
+        string NavigationDirection  = "insideOut"
+        string PropagationDirection = "oppositeToMomentum"
         PSet LayerPSet = {
                 vstring layerList = { "TIB1+TIB2" }
                 using layerInfo
