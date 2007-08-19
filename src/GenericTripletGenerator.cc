@@ -36,12 +36,12 @@ const OrderedSeedingHits& GenericTripletGenerator::run(const TrackingRegion& reg
                 	throw cms::Exception("CtfSpecialSeedGenerator") << "You are using " << ls.size() <<" layers in set instead of 3 ";
         	}	
 		std::vector<SeedingHit> innerHits  = region.hits(e, es, &ls[0]);
-		std::cout << "innerHits.size()=" << innerHits.size() << std::endl;
+		//std::cout << "innerHits.size()=" << innerHits.size() << std::endl;
 		std::vector<SeedingHit> middleHits = region.hits(e, es, &ls[1]);
-		std::cout << "middleHits.size()=" << middleHits.size() << std::endl;
+		//std::cout << "middleHits.size()=" << middleHits.size() << std::endl;
 		std::vector<SeedingHit> outerHits  = region.hits(e, es, &ls[2]);
-		std::cout << "outerHits.size()=" << outerHits.size() << std::endl;
-		std::cout << "trying " << innerHits.size()*middleHits.size()*outerHits.size() << " combinations "<<std::endl;
+		//std::cout << "outerHits.size()=" << outerHits.size() << std::endl;
+		//std::cout << "trying " << innerHits.size()*middleHits.size()*outerHits.size() << " combinations "<<std::endl;
 		std::vector<SeedingHit>::const_iterator iOuterHit;
 		for (iOuterHit = outerHits.begin(); iOuterHit != outerHits.end(); iOuterHit++){
 			std::vector<SeedingHit>::const_iterator iMiddleHit;
