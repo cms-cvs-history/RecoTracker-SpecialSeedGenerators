@@ -1,29 +1,3 @@
-block layerInfo = {
-	 PSet TID = {
-		InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
-		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
-		string TTRHBuilder = "WithTrackAngle"
-		untracked bool useRingSlector = false
-         }
-        PSet TEC = {
-		InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
-		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
-		string TTRHBuilder = "WithTrackAngle"
-		untracked bool useRingSlector = false
-		int32 minRing = 5
-		int32 maxRing = 7
-        }
-}
-
-
-
-
-
-
-
-
-
-
 module combinatorialbeamhaloseedfinder= CtfSpecialSeedGenerator{
     bool SetMomentum = true
     vint32 Charges = {-1 ,1 }	
@@ -44,6 +18,8 @@ module combinatorialbeamhaloseedfinder= CtfSpecialSeedGenerator{
         string PropagationDirection = "alongMomentum"
         PSet LayerPSet = {
                 vstring layerList = {  
+					"FPix1_pos+FPix2_pos",
+					"FPix1_neg+FPix2_neg",
 					"TID2_pos+TID3_pos",
 					"TID2_neg+TID3_neg",
                                       	"TEC7_pos+TEC8_pos",
@@ -60,6 +36,8 @@ module combinatorialbeamhaloseedfinder= CtfSpecialSeedGenerator{
         string PropagationDirection = "oppositeToMomentum"
         PSet LayerPSet = {
                 vstring layerList = {  
+					"FPix1_pos+FPix2_pos",
+                                        "FPix1_neg+FPix2_neg",
 					"TID2_pos+TID3_pos",
 					"TID2_neg+TID3_neg",
                                       	"TEC7_pos+TEC8_pos",
@@ -72,4 +50,3 @@ module combinatorialbeamhaloseedfinder= CtfSpecialSeedGenerator{
     }
    }
 }
-
