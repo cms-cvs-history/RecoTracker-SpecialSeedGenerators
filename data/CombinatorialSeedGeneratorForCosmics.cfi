@@ -1,11 +1,37 @@
 block layerInfo = {
-	 PSet TIB = {
+	 PSet TIB1 = {
 		InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+		string TTRHBuilder = "WithTrackAngle"
+         }
+	 PSet TIB2 = {
+		InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+		string TTRHBuilder = "WithTrackAngle"
+         }
+	 PSet TIB3 = {
 		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
 		string TTRHBuilder = "WithTrackAngle"
          }
-         PSet TOB = {
+         PSet TOB1 = {
 		InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+		string TTRHBuilder = "WithTrackAngle"
+        }
+         PSet TOB2 = {
+		InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+		string TTRHBuilder = "WithTrackAngle"
+        }
+         PSet TOB3 = {
+		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+		string TTRHBuilder = "WithTrackAngle"
+        }
+         PSet TOB4 = {
+		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+		string TTRHBuilder = "WithTrackAngle"
+        }
+         PSet TOB5 = {
+		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+		string TTRHBuilder = "WithTrackAngle"
+        }
+         PSet TOB6 = {
 		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
 		string TTRHBuilder = "WithTrackAngle"
         }
