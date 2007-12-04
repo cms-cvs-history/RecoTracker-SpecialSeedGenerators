@@ -1,63 +1,59 @@
+
+
 block layerInfo = {
-	 PSet TIB1 = {
-		InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
-		string TTRHBuilder = "WithTrackAngle"
+         PSet TIB1 = {
+                InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+                string TTRHBuilder = "WithTrackAngle"
          }
-	 PSet TIB2 = {
-		InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
-		string TTRHBuilder = "WithTrackAngle"
+         PSet TIB2 = {
+                InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+                string TTRHBuilder = "WithTrackAngle"
          }
-	 PSet TIB3 = {
-		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
-		string TTRHBuilder = "WithTrackAngle"
+         PSet TIB3 = {
+                InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                string TTRHBuilder = "WithTrackAngle"
          }
          PSet TOB1 = {
-		InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
-		string TTRHBuilder = "WithTrackAngle"
+                InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+                string TTRHBuilder = "WithTrackAngle"
         }
          PSet TOB2 = {
-		InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
-		string TTRHBuilder = "WithTrackAngle"
+                InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+                string TTRHBuilder = "WithTrackAngle"
         }
          PSet TOB3 = {
-		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
-		string TTRHBuilder = "WithTrackAngle"
+                InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                string TTRHBuilder = "WithTrackAngle"
         }
          PSet TOB4 = {
-		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
-		string TTRHBuilder = "WithTrackAngle"
+                InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                string TTRHBuilder = "WithTrackAngle"
         }
          PSet TOB5 = {
-		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
-		string TTRHBuilder = "WithTrackAngle"
+                InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                string TTRHBuilder = "WithTrackAngle"
         }
          PSet TOB6 = {
-		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
-		string TTRHBuilder = "WithTrackAngle"
+                InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                string TTRHBuilder = "WithTrackAngle"
         }
         PSet TEC = {
-		InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
-		InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
-		string TTRHBuilder = "WithTrackAngle"
-		untracked bool useRingSlector = false
-		int32 minRing = 5
-		int32 maxRing = 7
+                InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+                InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                string TTRHBuilder = "WithTrackAngle"
+                untracked bool useRingSlector = false
+		untracked bool useSimpleRphiHitsCleaner = true
+                int32 minRing = 5
+                int32 maxRing = 7
         }
 }
-
-
-
-
-
-
-
-
 
 
 module combinatorialcosmicseedfinder= CtfSpecialSeedGenerator{
     bool SetMomentum = true
     vint32 Charges = {-1}	
-    double SeedMomentum = 1    #initial momentum in GeV !!!set to a lower value for slice test data	
+    double SeedMomentum = 1    #initial momentum in GeV !!!set to a lower value for slice test data
+    double ErrorRescaling = 50		
     string TTRHBuilder = "WithTrackAngle"	
     bool UseScintillatorsConstraint = true
     bool CheckHitsAreOnDifferentLayers = false

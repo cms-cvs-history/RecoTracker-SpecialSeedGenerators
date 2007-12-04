@@ -1,7 +1,8 @@
 module combinatorialbeamhaloseedfinder= CtfSpecialSeedGenerator{
     bool SetMomentum = true
     vint32 Charges = {-1 ,1 }	
-    double SeedMomentum = 15    #initial momentum in GeV !!!set to a lower value for slice test data	
+    double SeedMomentum = 15    #initial momentum in GeV !!!set to a lower value for slice test data
+    double ErrorRescaling = 50	
     string TTRHBuilder = "WithTrackAngle"	
     bool UseScintillatorsConstraint = false
     bool CheckHitsAreOnDifferentLayers = false
