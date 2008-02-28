@@ -17,6 +17,7 @@ module combinatorialbeamhaloseedfinder= CtfSpecialSeedGenerator{
     {   string ComponentName = "BeamHaloPairGenerator"
         string NavigationDirection  = "outsideIn"
         string PropagationDirection = "alongMomentum"
+	double maxTheta=1
         PSet LayerPSet = {
                 vstring layerList = {  
 					"FPix1_pos+FPix2_pos",
@@ -35,6 +36,7 @@ module combinatorialbeamhaloseedfinder= CtfSpecialSeedGenerator{
     {   string ComponentName = "BeamHaloPairGenerator"
         string NavigationDirection  = "outsideIn"
         string PropagationDirection = "oppositeToMomentum"
+	double maxTheta=1
         PSet LayerPSet = {
                 vstring layerList = {  
 					"FPix1_pos+FPix2_pos",
