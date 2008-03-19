@@ -1,3 +1,28 @@
+block layerInfo = {
+         PSet TID = {
+                InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+                InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                string TTRHBuilder = "WithTrackAngle"
+                untracked bool useRingSlector = false
+         }
+        PSet TEC = {
+                InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
+                InputTag rphiRecHits    = siStripMatchedRecHits:rphiRecHit
+                string TTRHBuilder = "WithTrackAngle"
+                untracked bool useRingSlector = false
+                int32 minRing = 5
+                int32 maxRing = 7
+        }
+       PSet FPix = {
+                string HitProducer = "siPixelRecHits"
+                string TTRHBuilder = "TTRHBuilderWithoutAngle4PixelPairs"
+                untracked bool useErrorsFromParam = true
+                double hitErrorRPhi = 0.0051
+                double hitErrorRZ   = 0.0036
+        }
+}
+
+
 module combinatorialbeamhaloseedfinder= CtfSpecialSeedGenerator{
     bool SetMomentum = true
     vint32 Charges = {-1 ,1 }	
