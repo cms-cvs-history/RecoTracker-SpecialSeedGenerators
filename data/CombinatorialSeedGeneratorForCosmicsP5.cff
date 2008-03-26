@@ -25,7 +25,7 @@ include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder
 
 #seeding module
 module combinatorialcosmicseedfinderP5 = combinatorialcosmicseedfinder from "RecoTracker/SpecialSeedGenerators/data/CombinatorialSeedGeneratorForCosmics.cfi"
-replace combinatorialcosmicseedfinderP5.SetMomentum = false
+#replace combinatorialcosmicseedfinderP5.SetMomentum = false
 replace combinatorialcosmicseedfinderP5.UseScintillatorsConstraint = false
 replace combinatorialcosmicseedfinderP5.OrderedHitsFactoryPSets = {
     {   string ComponentName = "GenericTripletGenerator"
