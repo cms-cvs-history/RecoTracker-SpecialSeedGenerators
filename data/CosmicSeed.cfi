@@ -1,4 +1,7 @@
   module cosmicseedfinder= CosmicSeedGenerator{
+    bool doClusterCheck = true
+    InputTag ClusterCollectionLabel = siStripClusters
+    uint32 MaxNumberOfCosmicClusters = 300
     InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
     InputTag rphirecHits    = siStripMatchedRecHits:rphiRecHit
     InputTag stereorecHits  = siStripMatchedRecHits:stereoRecHit

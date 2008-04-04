@@ -50,6 +50,9 @@ block layerInfo = {
 
 
 module combinatorialcosmicseedfinder= CtfSpecialSeedGenerator{
+    bool doClusterCheck = true
+    InputTag ClusterCollectionLabel = siStripClusters
+    uint32 MaxNumberOfCosmicClusters = 300
     bool SetMomentum = true
     vint32 Charges = {-1}	
     double SeedMomentum = 1    #initial momentum in GeV !!!set to a lower value for slice test data
