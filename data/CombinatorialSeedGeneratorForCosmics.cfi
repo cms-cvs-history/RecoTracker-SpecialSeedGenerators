@@ -1,3 +1,4 @@
+include "RecoTracker/TkTrackingRegions/data/GlobalTrackingRegion.cfi"
 
 
 block layerInfo = {
@@ -65,7 +66,7 @@ module combinatorialcosmicseedfinder= CtfSpecialSeedGenerator{
      #string ComponentName = "RectangularEtaPhiTrackingRegionProducer"
      #include "RecoTracker/TkTrackingRegions/data/RectangularEtaPhiTrackingRegion.cfi"
      string ComponentName = "GlobalRegionProducer" 
-     include "RecoTracker/TkTrackingRegions/data/GlobalTrackingRegion.cfi"	 
+     using RegionPSetBlock
    }
  
    VPSet OrderedHitsFactoryPSets = {

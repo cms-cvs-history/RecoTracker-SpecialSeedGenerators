@@ -1,3 +1,5 @@
+include "RecoTracker/TkTrackingRegions/data/GlobalTrackingRegion.cfi"
+
 block layerInfo = {
          PSet TID = {
                 InputTag matchedRecHits = siStripMatchedRecHits:matchedRecHit
@@ -35,7 +37,7 @@ module combinatorialbeamhaloseedfinder= CtfSpecialSeedGenerator{
     bool SeedsFromPositiveY = false
     PSet RegionFactoryPSet = {
      string ComponentName = "GlobalRegionProducer" 
-     include "RecoTracker/TkTrackingRegions/data/GlobalTrackingRegion.cfi"	 
+     using RegionPSetBlock
    }
  
    VPSet OrderedHitsFactoryPSets = {
