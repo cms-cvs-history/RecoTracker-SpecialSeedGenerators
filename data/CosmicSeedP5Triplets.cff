@@ -1,3 +1,7 @@
+############ initialize magnetic field #########################
+
+include "Geometry/CMSCommonData/data/cmsMagneticFieldXML.cfi"
+
 
 
 #initialize geometry
