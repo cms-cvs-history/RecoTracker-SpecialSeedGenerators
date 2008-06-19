@@ -1,6 +1,3 @@
-############ initialize magnetic field #########################
-include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
-
 ############### initialize geometry #####################
 include "Geometry/CMSCommonData/data/cmsMTCCGeometryXML.cfi"
 include "Geometry/TrackerGeometryBuilder/data/trackerGeometry.cfi"
