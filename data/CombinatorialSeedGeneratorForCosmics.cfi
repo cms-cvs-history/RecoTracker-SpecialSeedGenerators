@@ -1,3 +1,4 @@
+include "RecoTracker/TkTrackingRegions/data/GlobalTrackingRegion.cfi"
 
 
 block layerInfo = {
@@ -55,7 +56,7 @@ module combinatorialcosmicseedfinder= CtfSpecialSeedGenerator{
     uint32 MaxNumberOfCosmicClusters = 300
     bool SetMomentum = true
     vint32 Charges = {-1}	
-    double SeedMomentum = 1    #initial momentum in GeV !!!set to a lower value for slice test data
+    double SeedMomentum = 5    #initial momentum in GeV !!!set to a lower value for slice test data
     double ErrorRescaling = 50		
     string TTRHBuilder = "WithTrackAngle"	
     bool UseScintillatorsConstraint = true
@@ -65,7 +66,7 @@ module combinatorialcosmicseedfinder= CtfSpecialSeedGenerator{
      #string ComponentName = "RectangularEtaPhiTrackingRegionProducer"
      #include "RecoTracker/TkTrackingRegions/data/RectangularEtaPhiTrackingRegion.cfi"
      string ComponentName = "GlobalRegionProducer" 
-     include "RecoTracker/TkTrackingRegions/data/GlobalTrackingRegion.cfi"	 
+     using RegionPSetBlock
    }
  
    VPSet OrderedHitsFactoryPSets = {
