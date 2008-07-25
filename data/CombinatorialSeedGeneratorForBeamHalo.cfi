@@ -26,7 +26,7 @@ block layerInfo = {
 
 
 module combinatorialbeamhaloseedfinder= CtfSpecialSeedGenerator{
-    bool doClusterCheck = false
+    bool doClusterCheck = true
     InputTag ClusterCollectionLabel = siStripClusters
     uint32 MaxNumberOfCosmicClusters = 300
     bool SetMomentum = true
