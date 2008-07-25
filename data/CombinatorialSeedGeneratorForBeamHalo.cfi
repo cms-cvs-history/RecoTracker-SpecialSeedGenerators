@@ -27,6 +27,8 @@ block layerInfo = {
 
 module combinatorialbeamhaloseedfinder= CtfSpecialSeedGenerator{
     bool doClusterCheck = false
+    InputTag ClusterCollectionLabel = siStripClusters
+    uint32 MaxNumberOfCosmicClusters = 300
     bool SetMomentum = true
     vint32 Charges = {-1 ,1 }	
     double SeedMomentum = 15    #initial momentum in GeV !!!set to a lower value for slice test data
