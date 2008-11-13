@@ -1,6 +1,0 @@
-# get TTRHBuilderWithoutAngle4PixelPairs
-include "RecoTracker/TkSeedingLayers/data/PixelLayerPairs.cfi"
-
-
-#get the module combinatorialbeamhaloseedfinder
-include "RecoTracker/SpecialSeedGenerators/data/CombinatorialSeedGeneratorForBeamHalo.cfi"
