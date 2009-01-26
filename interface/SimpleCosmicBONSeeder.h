@@ -47,8 +47,6 @@ class SimpleCosmicBONSeeder : public edm::EDProducer
 
   void init(const edm::EventSetup& c);
   bool triplets(const edm::Event &e , const edm::EventSetup& c);
-  bool seedsInOut(TrajectorySeedCollection &output, const edm::EventSetup& iSetup);
-  bool seedsOutIn(TrajectorySeedCollection &output, const edm::EventSetup& iSetup);
   bool seeds(TrajectorySeedCollection &output, const edm::EventSetup& iSetup);
   void done();
 
@@ -62,7 +60,8 @@ class SimpleCosmicBONSeeder : public edm::EDProducer
   std::string builderName;
 
   SeedingLayerSetsBuilder theLsb;
-  GlobalTrackingRegion region;
+  GlobalTrackingRegion region_;
+  double pMin_;
   bool writeTriplets_;
 
   bool   seedOnMiddle_; 
@@ -93,6 +92,11 @@ class SimpleCosmicBONSeeder : public edm::EDProducer
   bool checkCharge(const TrackingRecHit *hit) const ;
   bool checkCharge(const SiStripRecHit2D &hit, int subdetid) const ;
   void checkNoisyModules(const std::vector<TransientTrackingRecHit::RecHitPointer> &hits, std::vector<bool> &oks) const ;
+
+  //***top-bottom
+  bool positiveYOnly;
+  bool negativeYOnly;
+  //***
 };
 
 #endif
