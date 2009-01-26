@@ -32,9 +32,15 @@ SimpleCosmicBONSeeder::SimpleCosmicBONSeeder(edm::ParameterSet const& conf) :
   float originradius = regionConf.getParameter<double>("originRadius");
   float halflength   = regionConf.getParameter<double>("originHalfLength");
   float originz      = regionConf.getParameter<double>("originZPosition");
-  region = GlobalTrackingRegion(ptmin, originradius, halflength, originz);
+  region_ = GlobalTrackingRegion(ptmin, originradius, halflength, originz);
+  pMin_   = regionConf.getParameter<double>("pMin");
 
   builderName = conf_.getParameter<std::string>("TTRHBuilder");   
+
+  //***top-bottom
+  positiveYOnly=conf_.getParameter<bool>("PositiveYOnly");
+  negativeYOnly=conf_.getParameter<bool>("NegativeYOnly");
+  //***
 
   produces<TrajectorySeedCollection>();
   if (writeTriplets_) produces<edm::OwnVector<TrackingRecHit> >("cosmicTriplets");
@@ -90,7 +96,7 @@ void SimpleCosmicBONSeeder::produce(edm::Event& ev, const edm::EventSetup& es)
          bool tripletsOk = triplets(ev,es);
          if (tripletsOk) {
 
-             bool seedsOk    = seedsOutIn(*output,es);
+             bool seedsOk    = seeds(*output,es);
              if (!seedsOk) { }
 
              if (writeTriplets_) {
@@ -148,14 +154,14 @@ struct HigherInnerHit {
         float oy2 = ohit2->globalPosition().y();
         if (oy1 - iy1 > 0) { // 1 Downgoing
             if (oy2 - iy2 > 0) { // 2 Downgoing
-                // sort by inner, or by outer
-                return (iy1 < iy2 ? true : (oy1 < oy2));
+                // sort by inner, or by outer if inners are the same
+                return (iy1 != iy2 ? (iy1 > iy2) : (oy1 > oy2));
             } else return true; // else prefer downgoing
         } else if (oy2 - iy2 > 0) {
-            return true; // prefer downgoing
-        } else {
+            return false; // prefer downgoing
+        } else { // both upgoing
             // sort by inner, or by outer
-            return (iy1 < iy2 ? true : (oy1 < oy2));
+            return (iy1 != iy2 ? (iy1 < iy2) : (oy1 < oy2));
         }
     }
 };
@@ -168,7 +174,7 @@ bool SimpleCosmicBONSeeder::triplets(const edm::Event& e, const edm::EventSetup&
     SeedingLayerSets lss = theLsb.layers(es);
     SeedingLayerSets::const_iterator iLss;
 
-    double minRho = region.ptMin() / ( 0.003 * magfield->inTesla(GlobalPoint(0,0,0)).z() );
+    double minRho = region_.ptMin() / ( 0.003 * magfield->inTesla(GlobalPoint(0,0,0)).z() );
 
     for (iLss = lss.begin(); iLss != lss.end(); iLss++){
         SeedingLayers ls = *iLss;
@@ -177,9 +183,9 @@ bool SimpleCosmicBONSeeder::triplets(const edm::Event& e, const edm::EventSetup&
         }
 
         /// ctfseeding SeedinHits and their iterators
-        std::vector<SeedingHit> innerHits  = region.hits(e, es, &ls[0]);
-        std::vector<SeedingHit> middleHits = region.hits(e, es, &ls[1]);
-        std::vector<SeedingHit> outerHits  = region.hits(e, es, &ls[2]);
+        std::vector<SeedingHit> innerHits  = region_.hits(e, es, &ls[0]);
+        std::vector<SeedingHit> middleHits = region_.hits(e, es, &ls[1]);
+        std::vector<SeedingHit> outerHits  = region_.hits(e, es, &ls[2]);
         std::vector<SeedingHit>::const_iterator iOuterHit,iMiddleHit,iInnerHit;
 
         if (tripletsVerbosity_ > 0) {
@@ -197,6 +203,7 @@ bool SimpleCosmicBONSeeder::triplets(const edm::Event& e, const edm::EventSetup&
         std::vector<bool> middleOk(middleHits.size(), true);
         std::vector<bool> outerOk( outerHits.size(),  true);
 
+        size_t sizBefore = hitTriplets.size();
         /// Now actually filling in the charges for all the clusters
         int idx = 0;
         for (iOuterHit = outerHits.begin(), idx = 0; iOuterHit != outerHits.end(); ++idx, ++iOuterHit){
@@ -223,7 +230,7 @@ bool SimpleCosmicBONSeeder::triplets(const edm::Event& e, const edm::EventSetup&
             GlobalPoint  outerpos  = outerTTRH->globalPosition(); // this caches by itself
             bool         outerok   = outerOk[idx];
             if (outerok < goodHitsPerSeed_ - 2) {
-                if (tripletsVerbosity_ > 1) 
+                if (tripletsVerbosity_ > 2) 
                     std::cout << "Skipping at first hit: " << (outerok) << " < " << (goodHitsPerSeed_ - 2) << std::endl;
                 continue; 
             }
@@ -234,7 +241,7 @@ bool SimpleCosmicBONSeeder::triplets(const edm::Event& e, const edm::EventSetup&
                 GlobalPoint  middlepos  = middleTTRH->globalPosition(); // this caches by itself
                 bool         middleok   = middleOk[idx];
                 if (outerok+middleok < goodHitsPerSeed_ - 1) {
-                    if (tripletsVerbosity_ > 1) 
+                    if (tripletsVerbosity_ > 2) 
                         std::cout << "Skipping at second hit: " << (outerok+middleok) << " < " << (goodHitsPerSeed_ - 1) << std::endl;
                     continue; 
                 }
@@ -245,12 +252,21 @@ bool SimpleCosmicBONSeeder::triplets(const edm::Event& e, const edm::EventSetup&
                     GlobalPoint  innerpos  = innerTTRH->globalPosition(); // this caches by itself
                     bool         innerok   = innerOk[idx];
                     if (outerok+middleok+innerok < goodHitsPerSeed_) {
-                        if (tripletsVerbosity_ > 1) 
+                        if (tripletsVerbosity_ > 2) 
                             std::cout << "Skipping at third hit: " << (outerok+middleok+innerok) << " < " << (goodHitsPerSeed_) << std::endl;
                         continue;
                     } 
 
-                    if (tripletsVerbosity_ > 1) std::cout << "Trying seed with: " << innerpos << " + " << middlepos << " + " << outerpos << std::endl;
+		    //***top-bottom
+		    if (positiveYOnly && (innerpos.y()<0 || middlepos.y()<0 || outerpos.y()<0
+					  || outerpos.y() < innerpos.y()
+					  ) ) continue;
+		    if (negativeYOnly && (innerpos.y()>0 || middlepos.y()>0 || outerpos.y()>0
+					  || outerpos.y() > innerpos.y()
+					  ) ) continue;
+		    //***
+		    
+                    if (tripletsVerbosity_ > 2) std::cout << "Trying seed with: " << innerpos << " + " << middlepos << " + " << outerpos << std::endl;
                     if (goodTriplet(innerpos,middlepos,outerpos,minRho)) {
                         OrderedHitTriplet oht(*iInnerHit,*iMiddleHit,*iOuterHit);
                         hitTriplets.push_back(oht);
@@ -260,23 +276,31 @@ bool SimpleCosmicBONSeeder::triplets(const edm::Event& e, const edm::EventSetup&
                             edm::LogWarning("SimpleCosmicBONSeeder") << "Found too many triplets, bailing out.\n";
                             return false;
                         }
-                        if (tripletsVerbosity_ > 2) {
+                        if (tripletsVerbosity_ > 3) {
                             std::cout << " accepted seed #" << (hitTriplets.size()-1) << " w/: " 
                                 << innerpos << " + " << middlepos << " + " << outerpos << std::endl;
                         }
-                        if (tripletsVerbosity_ == 1) {
+                        if (tripletsVerbosity_ == 2) {
                                 std::cout << " good seed #" << (hitTriplets.size()-1) << " w/: "     
                                     << innerpos << " + " << middlepos << " + " << outerpos << std::endl;
                         }
-                        if (tripletsVerbosity_ > 2 && (helixVerbosity_ > 0)) { // debug the momentum here too
+                        if (tripletsVerbosity_ > 3 && (helixVerbosity_ > 0)) { // debug the momentum here too
                             pqFromHelixFit(innerpos,middlepos,outerpos,es); 
                         }
                     }
                 }
             }
         }
+        if ((tripletsVerbosity_ > 0) && (hitTriplets.size() > sizBefore)) {
+            std::cout << "                        iLss = " << layerTripletNames_[iLss - lss.begin()]
+                << " (" << (iLss - lss.begin()) << "): # = " 
+                << innerHits.size() << "/" << middleHits.size() << "/" << outerHits.size() 
+                << ": Found " << (hitTriplets.size() - sizBefore) << " seeds [running total: " << hitTriplets.size() << "]"
+                << std::endl ;
+        }
+
     }
-    //std::sort(hitTriplets.begin(),hitTriplets.end(),HigherInnerHit());
+    std::sort(hitTriplets.begin(),hitTriplets.end(),HigherInnerHit());
     return true;
 }
 bool SimpleCosmicBONSeeder::checkCharge(const TrackingRecHit *hit) const {
@@ -302,9 +326,7 @@ bool SimpleCosmicBONSeeder::checkCharge(const TrackingRecHit *hit) const {
 }
 bool SimpleCosmicBONSeeder::checkCharge(const SiStripRecHit2D &hit, int subdetid) const {
     const SiStripCluster *clust = (hit.cluster().isNonnull() ?  hit.cluster().get() : hit.cluster_regional().get());
-    int charge = 0; //std::accumulate(clust->amplitudes().begin(), clust->amplitudes().end(), int(0));
-    const std::vector<uint8_t> & ampls = clust->amplitudes();
-    for (size_t i = 0; i < ampls.size(); ++i) charge += ampls[i];
+    int charge = std::accumulate(clust->amplitudes().begin(), clust->amplitudes().end(), int(0));
     if (tripletsVerbosity_ > 1) {
         std::cerr << "Hit on " << subdetid << ", charge = " << charge << ", threshold = " << chargeThresholds_[subdetid] 
                   << ", detid = " <<  hit.geographicalId().rawId() << ", firstStrip = " << clust->firstStrip() << std::endl;
@@ -321,7 +343,7 @@ void SimpleCosmicBONSeeder::checkNoisyModules(const std::vector<TransientTrackin
     std::vector<bool>::iterator       ok = oks.begin(), okStart = ok, okEnd = oks.end();
     while (start < end) {
         DetId lastid = (*start)->geographicalId();
-        for (it = start + 1; (it < end) && ((*it)->geographicalId() != lastid); ++it) {
+        for (it = start + 1; (it < end) && ((*it)->geographicalId() == lastid); ++it) {
             ++ok;
         }
         if ( (it - start) > maxHitsPerModule_[lastid.subdetId()] ) { 
@@ -330,6 +352,11 @@ void SimpleCosmicBONSeeder::checkNoisyModules(const std::vector<TransientTrackin
                           << " (threshold is " << maxHitsPerModule_[lastid.subdetId()] << ")" << std::endl;
             }
             std::fill(okStart,ok,false);
+        } else if (tripletsVerbosity_ > 0) {
+            if ( (it - start) > std::min(4,maxHitsPerModule_[lastid.subdetId()]/4) ) {
+                std::cerr << "SimpleCosmicBONSeeder: Not marking noisy module " << lastid.rawId() << ", it has " << (it-start) << " rechits"
+                          << " (threshold is " << maxHitsPerModule_[lastid.subdetId()] << ")" << std::endl;
+            }
         }
         start = it; okStart = ok;
     }
@@ -338,115 +365,21 @@ void SimpleCosmicBONSeeder::checkNoisyModules(const std::vector<TransientTrackin
 bool SimpleCosmicBONSeeder::goodTriplet(const GlobalPoint &inner, const GlobalPoint & middle, const GlobalPoint & outer, const double &minRho) const {
     float dyOM = outer.y() - middle.y(), dyIM = inner.y() - middle.y();
     if ((dyOM * dyIM > 0) && (fabs(dyOM)>10) && (fabs(dyIM)>10)) {
-        if (tripletsVerbosity_ > 1) std::cout << "  fail for non coherent dy" << std::endl;
+        if (tripletsVerbosity_ > 2) std::cout << "  fail for non coherent dy" << std::endl;
         return false;
     }
     float dzOM = outer.z() - middle.z(), dzIM = inner.z() - middle.z();
     if ((dzOM * dzIM > 0) && (fabs(dzOM)>50) && (fabs(dzIM)>50)) {
-        if (tripletsVerbosity_ > 1) std::cout << "  fail for non coherent dz" << std::endl;
+        if (tripletsVerbosity_ > 2) std::cout << "  fail for non coherent dz" << std::endl;
         return false;
     }
-    FastCircle theCircle(inner,middle,outer);
-    if (theCircle.rho() < minRho) {
-        if (tripletsVerbosity_ > 1) std::cout << "  fail for pt cut" << std::endl;
-        return false;
-    }
-    return true;
-}
-
-bool SimpleCosmicBONSeeder::seedsInOut(TrajectorySeedCollection &output, const edm::EventSetup& iSetup)
-{
-#if 0
-    typedef TrajectoryStateOnSurface TSOS;
-
-    for (size_t it=0;it<hitTriplets.size();it++){
-        const OrderedHitTriplet &trip = hitTriplets[it];
-
-        GlobalPoint inner = tracker->idToDet((*(trip.inner())).geographicalId())->surface().
-            toGlobal((*(trip.inner())).localPosition());
-
-        GlobalPoint middle = tracker->idToDet((*(trip.middle())).geographicalId())->surface().
-            toGlobal((*(trip.middle())).localPosition());
-
-        GlobalPoint outer = tracker->idToDet((*(trip.outer())).geographicalId())->surface().
-            toGlobal((*(trip.outer())).localPosition());   
-
-        std::cout << "Processing triplet " << it << ": " << inner << " + " << middle << " + " << outer << std::endl;
-
-
-        FastHelix helix(outer,middle,inner,iSetup);
-        GlobalVector gv=helix.stateAtVertex().parameters().momentum(); // status on inner hit
-        float ch=helix.stateAtVertex().parameters().charge();
-        float Mom = sqrt( gv.x()*gv.x() + gv.y()*gv.y() + gv.z()*gv.z() ); 
-
-        if(Mom > 1000 || isnan(Mom))  { 
-            std::cout << "Processing triplet " << it << ": fail for momentum." << std::endl; 
-            continue;
-        }
-
-        if (gv.y()<0){ 
-            gv=-1.*gv; ch=-1.*ch; 
-            std::cout << "Processing triplet " << it << ": flip charge." << std::endl; 
-        }
-
-        GlobalTrajectoryParameters Gtp(inner,
-                gv,int(ch), 
-                &(*magfield));
-        FreeTrajectoryState CosmicSeed(Gtp,
-                CurvilinearTrajectoryError(AlgebraicSymMatrix55(AlgebraicMatrixID())));  
-        CosmicSeed.rescaleError(100);
-       
-        const Propagator * propagator = 0;  
-        if((outer.y()-inner.y())>0){
-            std::cout << "Processing triplet " << it << ":  downgoing." << std::endl; 
-            propagator = thePropagatorOp;
-        } else {
-            std::cout << "Processing triplet " << it << ":  upgoing." << std::endl; 
-            propagator = thePropagatorAl;
-        }
-        const OrderedHitTriplet::Hits seedHits = trip.hits(); // in,mid,out
-        TSOS propagated, updated;
-        bool fail = false;
-        for (size_t ih = 0; ih < 3; ++ih) {
-            //std::cout << "Processing triplet " << it << ", hit " << ih << "." << std::endl;
-            if (ih == 0) {
-                propagated = propagator->propagate(CosmicSeed, tracker->idToDet((*seedHits[ih]).geographicalId())->surface());
-            } else {
-                propagated = propagator->propagate(updated, tracker->idToDet((*seedHits[ih]).geographicalId())->surface());
-            }
-            if (!propagated.isValid()) {
-                std::cout << "Processing triplet " << it << ", hit " << ih << ": failed propagation." << std::endl;
-                fail = true; break;
-            } else {
-                //std::cout << "Processing triplet " << it << ", hit " << ih << ": propagated state = " << propagated;
-            }
-            const TransientTrackingRecHit::ConstRecHitPointer & tthp   = seedHits[ih];
-            TransientTrackingRecHit::RecHitPointer              newtth = tthp->clone(propagated);
-            updated = theUpdator->update(propagated, *newtth);
-            if (!updated.isValid()) {
-                std::cout << "Processing triplet " << it << ", hit " << ih << ": failed update." << std::endl;
-                fail = true; break;
-            } else {
-                //std::cout << "Processing triplet " << it << ", hit " << ih << ": updated state = " << updated;
-            }
-        }
-
-        if (!fail) {
-            std::cout << "Processing triplet " << it << ": finally made a state:" << updated <<"\n Now flipping it." << std::endl;
-            TSOS flipped( LocalTrajectoryParameters(updated.localPosition(), - updated.localMomentum(), updated.charge()),
-                          updated.localError(), updated.surface(), updated.magneticField());
-            flipped.rescaleError(10);
-            std::cout << "Processing triplet " << it << ": flipped and rescaled state is " << flipped << std::endl;
-            std::cout << "Processed  triplet " << it << ": success: " << inner << " + " << middle << " + " << outer << std::endl;
-            
-            PTrajectoryStateOnDet *PTraj = transformer.persistentState(flipped, (*(trip.outer())).geographicalId().rawId());
-            edm::OwnVector<TrackingRecHit> hits;
-            output.push_back(TrajectorySeed(*PTraj,hits,
-                                                ( (outer.y()-inner.y()>0) ? alongMomentum : oppositeToMomentum) ));
-            delete PTraj;
+    if (minRho > 0) {
+        FastCircle theCircle(inner,middle,outer);
+        if (theCircle.rho() < minRho) {
+            if (tripletsVerbosity_ > 2) std::cout << "  fail for pt cut" << std::endl;
+            return false;
         }
     }
-#endif
     return true;
 }
 
@@ -500,7 +433,7 @@ SimpleCosmicBONSeeder::pqFromHelixFit(const GlobalPoint &inner, const GlobalPoin
     return mypq;
 }
 
-bool SimpleCosmicBONSeeder::seedsOutIn(TrajectorySeedCollection &output, const edm::EventSetup& iSetup)
+bool SimpleCosmicBONSeeder::seeds(TrajectorySeedCollection &output, const edm::EventSetup& iSetup)
 {
     typedef TrajectoryStateOnSurface TSOS;
     
@@ -541,9 +474,9 @@ bool SimpleCosmicBONSeeder::seedsOutIn(TrajectorySeedCollection &output, const e
             continue;
         }
 
-        if (gv.perp() < region.ptMin()) {
+        if (gv.perp() < region_.ptMin()) {
             if (seedVerbosity_ > 1)
-                std::cout << "Processing triplet " << it << ": fail for pt = " << gv.perp() << " < ptMin = " << region.ptMin() << std::endl; 
+                std::cout << "Processing triplet " << it << ": fail for pt = " << gv.perp() << " < ptMin = " << region_.ptMin() << std::endl; 
             continue;
         }
 
@@ -618,10 +551,16 @@ bool SimpleCosmicBONSeeder::seedsOutIn(TrajectorySeedCollection &output, const e
                     std::cout << "Processing triplet " << it << ", hit " << ih << ": updated state = " << updated;
             }
         }
-        if (!fail && updated.isValid() && (updated.globalMomentum().perp() < region.ptMin())) {
+        if (!fail && updated.isValid() && (updated.globalMomentum().perp() < region_.ptMin())) {
             if (seedVerbosity_ > 1)
                 std::cout << "Processing triplet " << it << 
-                             ": failed for final pt " << updated.globalMomentum().perp() << " < " << region.ptMin() << std::endl;
+                             ": failed for final pt " << updated.globalMomentum().perp() << " < " << region_.ptMin() << std::endl;
+            fail = true;
+        }
+        if (!fail && updated.isValid() && (updated.globalMomentum().mag() < pMin_)) {
+            if (seedVerbosity_ > 1)
+                std::cout << "Processing triplet " << it << 
+                             ": failed for final p " << updated.globalMomentum().perp() << " < " << pMin_ << std::endl;
             fail = true;
         }
         if (!fail) {
@@ -661,79 +600,6 @@ bool SimpleCosmicBONSeeder::seedsOutIn(TrajectorySeedCollection &output, const e
     return true;
 }
 
-bool SimpleCosmicBONSeeder::seeds(TrajectorySeedCollection &output, const edm::EventSetup& iSetup)
-{
-#if 0
-    typedef TrajectoryStateOnSurface TSOS;
-
-    for (uint it=0;it<hitTriplets.size();it++){
-
-        GlobalPoint inner = tracker->idToDet((*(hitTriplets[it].inner())).geographicalId())->surface().
-            toGlobal((*(hitTriplets[it].inner())).localPosition());
-
-        GlobalPoint middle = tracker->idToDet((*(hitTriplets[it].middle())).geographicalId())->surface().
-            toGlobal((*(hitTriplets[it].middle())).localPosition());
-
-        GlobalPoint outer = tracker->idToDet((*(hitTriplets[it].outer())).geographicalId())->surface().
-            toGlobal((*(hitTriplets[it].outer())).localPosition());   
-
-        TransientTrackingRecHit::ConstRecHitPointer outrhit= TTTRHBuilder->build(hitTriplets[it].outer());
-        edm::OwnVector<TrackingRecHit> hits;
-        hits.push_back((*(hitTriplets[it].outer())).clone());
-        FastHelix helix(inner, middle, outer,iSetup);
-        GlobalVector gv=helix.stateAtVertex().parameters().momentum();
-        float ch=helix.stateAtVertex().parameters().charge();
-        float Mom = sqrt( gv.x()*gv.x() + gv.y()*gv.y() + gv.z()*gv.z() ); 
-        if(Mom > 1000 || isnan(Mom))  continue;   // ChangedByDaniele 
-
-        if (gv.y()>0){
-            gv=-1.*gv;
-            ch=-1.*ch;
-        }
-
-        GlobalTrajectoryParameters Gtp(outer,
-                gv,int(ch), 
-                &(*magfield));
-        FreeTrajectoryState CosmicSeed(Gtp,
-                CurvilinearTrajectoryError(AlgebraicSymMatrix55(AlgebraicMatrixID())));  
-        if((outer.y()-inner.y())>0){
-            const TSOS outerState =
-                thePropagatorAl->propagate(CosmicSeed,
-                        tracker->idToDet((*(hitTriplets[it].outer())).geographicalId())->surface());
-            if ( outerState.isValid()) {
-                LogDebug("SimpleCosmicBONSeeder") <<"outerState "<<outerState;
-                const TSOS outerUpdated= theUpdator->update( outerState,*outrhit);
-                if ( outerUpdated.isValid()) {
-                    LogDebug("SimpleCosmicBONSeeder") <<"outerUpdated "<<outerUpdated;
-
-                    PTrajectoryStateOnDet *PTraj=  
-                        transformer.persistentState(outerUpdated,(*(hitTriplets[it].outer())).geographicalId().rawId());
-                    output.push_back(TrajectorySeed(*PTraj,hits,alongMomentum));
-
-                    delete PTraj;
-                }
-            }
-        } else {
-            const TSOS outerState =
-                thePropagatorOp->propagate(CosmicSeed,
-                        tracker->idToDet((*(hitTriplets[it].outer())).geographicalId())->surface());
-            if ( outerState.isValid()) {
-                LogDebug("SimpleCosmicBONSeeder") <<"outerState "<<outerState;
-                const TSOS outerUpdated= theUpdator->update( outerState,*outrhit);
-                if ( outerUpdated.isValid()) {
-                    LogDebug("SimpleCosmicBONSeeder") <<"outerUpdated "<<outerUpdated;
-
-                    PTrajectoryStateOnDet *PTraj=  
-                        transformer.persistentState(outerUpdated, (*(hitTriplets[it].outer())).geographicalId().rawId());
-                    output.push_back(TrajectorySeed(*PTraj,hits,oppositeToMomentum));
-                    delete PTraj;
-                }
-            }
-        }
-    }
-#endif
-    return true;
-}
 void SimpleCosmicBONSeeder::done(){
   delete thePropagatorAl;
   delete thePropagatorOp;
