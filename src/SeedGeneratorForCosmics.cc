@@ -90,7 +90,7 @@ bool SeedGeneratorForCosmics::seeds(TrajectorySeedCollection &output,
   LogDebug("CosmicSeedFinder")<<"Number of triplets "<<HitTriplets.size();
   LogDebug("CosmicSeedFinder")<<"Number of pairs "<<HitPairs.size();
 
-  for (unsigned int it=0;it<HitTriplets.size();it++){
+  for (uint it=0;it<HitTriplets.size();it++){
     
     //const TrackingRecHit *hit = &(
     //    const TrackingRecHit* hit = it->hits();
@@ -129,7 +129,7 @@ bool SeedGeneratorForCosmics::seeds(TrajectorySeedCollection &output,
     GlobalVector gv=helix.stateAtVertex().parameters().momentum();
     float ch=helix.stateAtVertex().parameters().charge();
     float Mom = sqrt( gv.x()*gv.x() + gv.y()*gv.y() + gv.z()*gv.z() ); 
-    if(Mom > 1000 || std::isnan(Mom))  continue;   // ChangedByDaniele 
+    if(Mom > 1000 || isnan(Mom))  continue;   // ChangedByDaniele 
 
     if (gv.y()>0){
       gv=-1.*gv;
@@ -189,7 +189,7 @@ bool SeedGeneratorForCosmics::seeds(TrajectorySeedCollection &output,
   }
   
 
-  for(unsigned int is=0;is<HitPairs.size();is++){
+  for(uint is=0;is<HitPairs.size();is++){
 
     
 
