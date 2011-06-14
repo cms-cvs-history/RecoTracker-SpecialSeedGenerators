@@ -26,11 +26,11 @@ regionalCosmicTrackerSeeds = cms.EDProducer( "SeedGeneratorFromRegionHitsEDProdu
         ),
       ToolsPSet = cms.PSet(
         thePropagatorName           = cms.string("AnalyticalPropagator"),
-        regionBase                  = cms.string("seedOnL2Muon") # or seedOnCosmicMuon or seedOnStaMuon(default)
+        regionBase                  = cms.string("seedOnCosmicMuon") # seedOnL2Muon or seedOnCosmicMuon or seedOnStaMuon(default)
 
         ),
       CollectionsPSet = cms.PSet(
-        recoMuonsCollection            = cms.InputTag("muons"),  # se to "muons" and change ToolsPSet.regionBase to "" in order to use these.
+        recoMuonsCollection            = cms.InputTag("muons1stStep"),  # se to "muons" and change ToolsPSet.regionBase to "" in order to use these.
         recoTrackMuonsCollection       = cms.InputTag("cosmicMuons"), # or cosmicMuons1Leg and change ToolsPSet.regionBase to "seedOnCosmicMuon" in order to use these.
         recoL2MuonsCollection          = cms.InputTag(""), # given by the hlt path sequence
         ),
